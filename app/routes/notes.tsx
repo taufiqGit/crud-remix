@@ -7,6 +7,8 @@ import {
 } from "@remix-run/node";
 import type { ActionArgs } from "@remix-run/node";
 import { Form } from "@remix-run/react";
+import { Config } from "config";
+import path from "path";
 import styles from "~/styles/newNotes.css";
 
 export async function action({ request }: ActionArgs) {
@@ -15,11 +17,12 @@ export async function action({ request }: ActionArgs) {
   const uploadHandler = unstable_composeUploadHandlers(
     unstable_createFileUploadHandler({
       maxPartSize: 5_000_000,
-      file: ({ filename }) => {
-        console.log(filename);
+      file: (file) => {
+        console.log(file.contentType);
 
-        return filename;
+        return file.filename;
       },
+      directory: "public/images",
     }),
     unstable_createMemoryUploadHandler()
   );
@@ -32,6 +35,8 @@ export async function action({ request }: ActionArgs) {
   const title = formData.get("title");
   console.log(file, title, "akkk");
 
+  // const temp_path = file.path
+  // const ss = fs.createReadStream()
   return redirect("/notes");
 }
 
@@ -44,7 +49,7 @@ export default function NotePages() {
         method="post"
         encType="multipart/form-data"
       >
-        <input className="border-2" type="text" name="title" />
+        <input className="border-2 px-2" type="text" name="title" />
         <input className="border-2" type="file" name="image" />
         <button className="bg-gray-700 text-white" type="submit">
           Save
