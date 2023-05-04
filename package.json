@@ -12,6 +12,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@prisma/client": "4.13.0",
     "@remix-run/express": "^1.11.1",
     "@remix-run/node": "^1.11.1",
     "@remix-run/react": "^1.11.1",
@@ -33,6 +34,7 @@
     "eslint": "^8.27.0",
     "nodemon": "^2.0.20",
     "npm-run-all": "^4.1.5",
+    "prisma": "^4.13.0",
     "tailwindcss": "^3.3.2",
     "typescript": "^4.8.4"
   },

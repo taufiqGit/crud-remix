@@ -1,3 +1,4 @@
+import { PrismaClient } from "@prisma/client";
 import {
   redirect,
   unstable_composeUploadHandlers,
@@ -5,11 +6,15 @@ import {
   unstable_createMemoryUploadHandler,
   unstable_parseMultipartFormData,
 } from "@remix-run/node";
-import type { ActionArgs } from "@remix-run/node";
+import type { ActionArgs, MetaFunction } from "@remix-run/node";
 import { Form } from "@remix-run/react";
-import { Config } from "config";
-import path from "path";
 import styles from "~/styles/newNotes.css";
+
+const prisma = new PrismaClient();
+
+export const meta: MetaFunction = () => ({
+  title: "P ayang",
+});
 
 export async function action({ request }: ActionArgs) {
   // const body = await request.formData();
@@ -18,7 +23,7 @@ export async function action({ request }: ActionArgs) {
     unstable_createFileUploadHandler({
       maxPartSize: 5_000_000,
       file: (file) => {
-        console.log(file.contentType);
+        console.log(file.filename);
 
         return file.filename;
       },
@@ -32,9 +37,17 @@ export async function action({ request }: ActionArgs) {
     uploadHandler
   );
   const file = formData.get("image");
-  const title = formData.get("title");
-  console.log(file, title, "akkk");
-
+  const titleb = formData.get("title");
+  // console.log(file, title, "akkk");
+  try {
+    const response = await prisma.notes.create({
+      data: {
+        title: `${titleb}`,
+        thumbnail: "s",
+        desc: "ddd",
+      },
+    });
+  } catch (error) {}
   // const temp_path = file.path
   // const ss = fs.createReadStream()
   return redirect("/notes");
